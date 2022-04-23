@@ -7,6 +7,7 @@
 
 class DepthFirstSearch: Collection {
     typealias Element = (v: Int, p: Int?, d: Int, f: Int)
+    typealias Edge = (u: Int, v: Int)
     
     enum Color {
         case white
@@ -46,6 +47,36 @@ class DepthFirstSearch: Collection {
         }
     }
     
+    var startOrder: [Element] {
+        return Array(self.sorted(by: {$0.d < $1.d}))
+    }
+    
+    var finishOrder: [Element] {
+        return Array(self.sorted(by: {$0.f < $1.f}))
+    }
+    
+    subscript(position: Int) -> Element {
+        precondition(position >= startIndex && position < endIndex)
+        let v = position
+        return (v: v, p: predecessor[v], d: discovered[v], f: finished[v])
+    }
+    
+    var treeEdges: [Edge] {
+        return (0..<g.vertexCount).filter({edgeType[$0] != nil && edgeType[$0]! == EdgeType.tree}).map({(u: predecessor[$0]!, v: $0)})
+    }
+    
+    var startIndex: Int {
+        return 0
+    }
+    
+    var endIndex: Int {
+        return g.vertexCount
+    }
+    
+    func index(after i: Int) -> Int {
+        return i + 1
+    }
+    
     private func dfsVisit(s: Int) {
         var start = [s]
         var finish: [Int] = []
@@ -79,36 +110,6 @@ class DepthFirstSearch: Collection {
                 finish.removeLast()
             }
         }
-    }
-    
-    var startOrder: [Element] {
-        return Array(self.sorted(by: {$0.d < $1.d}))
-    }
-    
-    var finishOrder: [Element] {
-        return Array(self.sorted(by: {$0.f < $1.f}))
-    }
-    
-    subscript(position: Int) -> Element {
-        precondition(position >= startIndex && position < endIndex)
-        let v = position
-        return (v: v, p: predecessor[v], d: discovered[v], f: finished[v])
-    }
-    
-    var treeEdges: [(u: Int, v: Int)] {
-        return (0..<g.vertexCount).filter({edgeType[$0] != nil && edgeType[$0]! == EdgeType.tree}).map({(u: predecessor[$0]!, v: $0)})
-    }
-    
-    var startIndex: Int {
-        return 0
-    }
-    
-    var endIndex: Int {
-        return g.vertexCount
-    }
-    
-    func index(after i: Int) -> Int {
-        return i + 1
     }
 }
 
