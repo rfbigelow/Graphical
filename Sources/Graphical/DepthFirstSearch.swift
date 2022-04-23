@@ -74,6 +74,9 @@ class DepthFirstSearch: Collection {
     }
     
     func index(after i: Int) -> Int {
+        guard i < endIndex else {
+            return endIndex
+        }
         return i + 1
     }
     
