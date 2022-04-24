@@ -5,17 +5,26 @@
 //  Created by Robert Bigelow on 4/23/22.
 //
 
-class DepthFirstSearch: Collection {
-    typealias Element = (v: Int, p: Int?, d: Int, f: Int)
-    typealias Edge = (u: Int, v: Int)
+/// An implementation of the depth first search (DFS) algorithm.
+///
+///  This class runs the depth first search algorithm on the given graph and caches the results, making them available as a collection.
+public class DepthFirstSearch: Collection {
+    public typealias Element = (v: Int, p: Int?, d: Int, f: Int)
+    public typealias Edge = (u: Int, v: Int)
     
+    /// The color of a vertex during the search.
     enum Color {
+        /// A white vertex has not been discovered yet.
         case white
+        /// A gray vertex has been discovered, but not fully explored.
         case gray
+        /// A black vertex has been fully explored.
         case black
     }
     
+    /// A classification of an edge.
     enum EdgeType {
+        /// Tree edges are edges that are on a DFS path. All tree edges together make up the depth first forest of the graph.
         case tree
     }
     
@@ -27,9 +36,12 @@ class DepthFirstSearch: Collection {
     private var predecessor: [Int?]
     private var time = 0
     
-    private(set) var hasCycle = false
-    
-    init(graph: Graph, visitOrder: [Int]? = nil) {
+    /// Initializes a `DepthFirstSearch`, performing a search on the given graph.
+    ///
+    /// - Parameters:
+    ///  - graph: The graph to search.
+    ///  - visitOrder: An optional array which controls the order in which the vertices of the graph are explored.
+    public init(graph: Graph, visitOrder: [Int]? = nil) {
         precondition(visitOrder == nil || visitOrder!.count == graph.vertexCount)
         g = graph
         color = Array(repeating: Color.white, count: g.vertexCount)
@@ -47,44 +59,62 @@ class DepthFirstSearch: Collection {
         }
     }
     
-    var startOrder: [Element] {
+    /// A flag which indicates if a cycle in the graph was detected.
+    public private(set) var hasCycle = false
+    
+    /// Gets an array containing the search results for the vertices in the order that they were discovered.
+    public var startOrder: [Element] {
         return Array(self.sorted(by: {$0.d < $1.d}))
     }
     
-    var finishOrder: [Element] {
+    /// Gets an array containing the search results for the vertices in the order for which exploration of the vertex finished.
+    public var finishOrder: [Element] {
         return Array(self.sorted(by: {$0.f < $1.f}))
     }
     
-    subscript(position: Int) -> Element {
+    /// Gets the search result for the vertex at the given position.
+    public subscript(position: Int) -> Element {
         precondition(position >= startIndex && position < endIndex)
         let v = position
         return (v: v, p: predecessor[v], d: discovered[v], f: finished[v])
     }
     
-    var treeEdges: [Edge] {
+    /// Gets an array of all the tree edges in the graph, which constitutes the depth first forest.
+    public var treeEdges: [Edge] {
         return (0..<g.vertexCount).filter({edgeType[$0] != nil && edgeType[$0]! == EdgeType.tree}).map({(u: predecessor[$0]!, v: $0)})
     }
     
-    var startIndex: Int {
+    /// The first index in this collection.
+    public var startIndex: Int {
         return 0
     }
     
-    var endIndex: Int {
+    /// The end index of this collection, which is one element past the end of the collection.
+    public var endIndex: Int {
         return g.vertexCount
     }
     
-    func index(after i: Int) -> Int {
+    /// Returns the position immediately following the given index.
+    public func index(after i: Int) -> Int {
         guard i < endIndex else {
             return endIndex
         }
         return i + 1
     }
     
+    /// Performs a depth first search from the given vertex.
+    ///
+    /// This function uses an iterative algorithm that employs 2 queues to simulate the parenthetical nature of a recursive implementation. This allows us to mark start and finish times for each vertex. This information can be used to derive a number of interesting properties or implement other algorithms.
+    ///
+    /// - Parameters:
+    ///  - s: The vertex to start the search from.
     private func dfsVisit(s: Int) {
         var start = [s]
         var finish: [Int] = []
         
         while !start.isEmpty || !finish.isEmpty {
+            
+            // process verts in the start stack
             if !start.isEmpty {
                 let u = start.removeLast()
                 guard color[u] == Color.white else {
@@ -106,6 +136,7 @@ class DepthFirstSearch: Collection {
                 }
             }
             
+            // process verts in the finish stack
             while let u = finish.last, g.adjacent(v: u).allSatisfy({color[$0] != Color.white}) {
                 color[u] = Color.black
                 time += 1
@@ -116,12 +147,24 @@ class DepthFirstSearch: Collection {
     }
 }
 
-func topologicalSort(g: Digraph) -> [Int] {
+/// Performs a topological sort of the given directed graph.
+///
+/// - Parameters:
+///  - g: The directed graph to perform the sort on.
+///
+///- Returns: The vertices of `g` in topological order.
+public func topologicalSort(g: Digraph) -> [Int] {
     let dfs = DepthFirstSearch(graph: g)
     return dfs.hasCycle ? [] : Array(dfs.finishOrder.map({$0.v}).reversed())
 }
 
-func connectedComponents(g: Graph) -> [[Int]] {
+/// Finds the connected components of the given graph.
+///
+/// - Parameters:
+///  - g: The graph to find the connected components of.
+///
+/// - Returns: An array of arrays, each of which contains the vertices of one of the connected components of `g`.
+public func connectedComponents(g: Graph) -> [[Int]] {
     let dfs = DepthFirstSearch(graph: g)
     let gt = g.transpose()
     let order = Array(dfs.sorted(by: {$0.f > $1.f}).map({$0.v}))

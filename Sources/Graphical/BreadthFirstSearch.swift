@@ -7,7 +7,7 @@
 
 /// An implementation of the breadth first search (BFS) algorithm.
 ///
-/// This class runs breadth first search on the given graph and caches the results, which are available via subscript or as a sequence.
+/// This class runs breadth first search on the given graph and caches the results, which are available as a collection.
 class BreadthFirstSearch: Collection {
     /// An element of a breadth first search consists of a vertex, its predecessor (if it has one), and the distance from the starting vertex.
     typealias Element = (v:Int, p: Int?, d: Int)
