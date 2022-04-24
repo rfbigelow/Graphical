@@ -5,12 +5,20 @@
 //  Created by Robert Bigelow on 4/23/22.
 //
 
+/// An implementation of the breadth first search (BFS) algorithm.
+///
+/// This class runs breadth first search on the given graph and caches the results, which are available via subscript or as a sequence.
 class BreadthFirstSearch: Collection {
+    /// An element of a breadth first search consists of a vertex, its predecessor (if it has one), and the distance from the starting vertex.
     typealias Element = (v:Int, p: Int?, d: Int)
     
-    enum Color {
+    /// The color of a vertex.
+    private enum Color {
+        /// A white vertex has not yet been visited.
         case white
+        /// A gray vertex has been discovered, but is still being explored.
         case gray
+        /// A black vertex has been fully explored, meaning that all of its adjacent vertices have been discovered.
         case black
     }
 
@@ -19,8 +27,12 @@ class BreadthFirstSearch: Collection {
     private var distance: [Int]
     private var predecessor: [Int?]
     private var queue: [Int] = []
-    private var bfsOrder: [Int] = []
     
+    /// Initializes a new `BreadthFirstSearch`, which runs the BFS algorithm on the given graph.
+    ///
+    /// - Parameters:
+    ///  - graph: The `Graph` to search.
+    ///  - startingVertex: The vertex to search from. Must be a vertex in the graph.
     init(graph: Graph, startingVertex: Int) {
         g = graph
         color = Array(repeating: Color.white, count: g.vertexCount)
@@ -44,22 +56,30 @@ class BreadthFirstSearch: Collection {
             bfsOrder.append(next)
         }
     }
+
+    /// Gets the vertices in the order they were visited by BFS.
+    public private(set) var bfsOrder: [Int] = []
     
-    subscript(position: Int) -> Element {
+    /// Gets the result of the BFS for the vertex at the given position.
+    ///
+    /// - Returns: A tuple with the vertex, the vertex's predecessor (if it has one) and the distance from the source vertex.
+    public subscript(position: Int) -> Element {
         precondition(position >= 0 && position < bfsOrder.count)
-        let v = bfsOrder[position]
-        return (v: v, p: predecessor[v], d: distance[v])
+        return (v: position, p: predecessor[position], d: distance[position])
     }
     
-    var startIndex: Int {
+    /// The first index in this collection.
+    public var startIndex: Int {
         return bfsOrder.startIndex
     }
     
-    var endIndex: Int {
+    /// The end index of this collection, which is one element past the end of the collection.
+    public var endIndex: Int {
         return bfsOrder.endIndex
     }
     
-    func index(after i: Int) -> Int {
+    /// Returns the position immediately after the given index.
+    public func index(after i: Int) -> Int {
         return bfsOrder.index(after: i)
     }
 }
