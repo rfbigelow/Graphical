@@ -10,10 +10,10 @@
 /// Adopt the Graph protocol to allow your type to be traversed by graph algorithms.
 public protocol Graph {
     
-    /// The number of vertices in the graph.
+    /// Gets the number of vertices in the graph.
     var vertexCount: Int { get }
     
-    /// The number of edges in the graph.
+    /// Gets the number of edges in the graph.
     var edgeCount: Int { get }
     
     /// Gets an array containing the vertices that are adjacent to `v`.

@@ -9,10 +9,12 @@
 public struct Digraph: Graph {
     private var vertices: [[Int]]
     
+    /// Gets the number of vertices in the graph.
     public var vertexCount: Int {
         return vertices.count
     }
     
+    /// Gets the number of edges in the graph.
     public private(set) var edgeCount: Int = 0
     
     /// Initializes a new `Digraph` with the specified number of vertices.
@@ -23,11 +25,18 @@ public struct Digraph: Graph {
         vertices = Array(repeating: [], count: vertexCount)
     }
     
+    /// Gets an array containing the vertices that are adjacent to `v`.
+    ///
+    /// - Parameters:
+    ///  - v: The vertex for which to get the adjacency list. Must be greater than or equal to `0` and less than `vertexCount`.
     public func adjacent(v: Int) -> [Int] {
         precondition(v >= 0 && v < vertices.count)
         return vertices[v]
     }
     
+    /// Transposes the graph, returning a new graph.
+    ///
+    /// - Returns: A new graph containing the transpose.
     public func transpose() -> Graph {
         var g = Digraph(vertexCount: vertexCount)
         for u in 0..<vertexCount {
