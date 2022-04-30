@@ -164,7 +164,7 @@ public func topologicalSort(g: Digraph) -> [Int] {
 ///  - g: The graph to find the connected components of.
 ///
 /// - Returns: An array of arrays, each of which contains the vertices of one of the connected components of `g`.
-public func connectedComponents(g: Graph) -> [[Int]] {
+public func connectedComponents(g: Digraph) -> [[Int]] {
     let dfs = DepthFirstSearch(graph: g)
     let gt = g.transpose()
     let order = Array(dfs.sorted(by: {$0.f > $1.f}).map({$0.v}))

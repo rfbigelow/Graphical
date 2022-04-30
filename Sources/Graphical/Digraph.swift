@@ -34,6 +34,19 @@ public struct Digraph {
         vertices[u].append(v)
         edgeCount += 1
     }
+    
+    /// Transposes the graph, returning a new graph.
+    ///
+    /// - Returns: A new graph containing the transpose.
+    public func transpose() -> Graph {
+        var g = Digraph(vertexCount: vertexCount)
+        for u in 0..<vertexCount {
+            for v in vertices[u] {
+                g.addEdge(u: v, v: u)
+            }
+        }
+        return g
+    }
 }
 
 extension Digraph: Graph {
@@ -49,18 +62,5 @@ extension Digraph: Graph {
     public func adjacent(v: Int) -> [Int] {
         precondition(v >= 0 && v < vertices.count)
         return vertices[v]
-    }
-    
-    /// Transposes the graph, returning a new graph.
-    ///
-    /// - Returns: A new graph containing the transpose.
-    public func transpose() -> Graph {
-        var g = Digraph(vertexCount: vertexCount)
-        for u in 0..<vertexCount {
-            for v in vertices[u] {
-                g.addEdge(u: v, v: u)
-            }
-        }
-        return g
     }
 }
