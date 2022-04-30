@@ -22,7 +22,9 @@ public struct UndirectedGraph {
             return
         }
         vertices[u].append(v)
-        vertices[v].append(u)
+        if u != v {
+            vertices[v].append(u)
+        }
         edgeCount += 1
     }
 }
