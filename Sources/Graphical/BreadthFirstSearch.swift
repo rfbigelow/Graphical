@@ -26,7 +26,6 @@ class BreadthFirstSearch: Collection {
     private var color: [Color]
     private var distance: [Int]
     private var predecessor: [Int?]
-    private var queue: [Int] = []
     
     /// Initializes a new `BreadthFirstSearch`, which runs the BFS algorithm on the given graph.
     ///
@@ -42,15 +41,16 @@ class BreadthFirstSearch: Collection {
         color[startingVertex] = Color.gray
         distance[startingVertex] = 0
         predecessor[startingVertex] = nil
-        queue.append(startingVertex)
+        let queue = Queue<Int>()
+        queue.enqueue(startingVertex)
         
         while !queue.isEmpty {
-            let next = queue.remove(at: 0)
+            let next = queue.dequeue()
             for v in g.adjacent(v: next).filter({color[$0] == Color.white}) {
                 color[v] = Color.gray
                 distance[v] = distance[next] + 1
                 predecessor[v] = next
-                queue.append(v)
+                queue.enqueue(v)
             }
             color[next] = Color.black
             bfsOrder.append(next)
