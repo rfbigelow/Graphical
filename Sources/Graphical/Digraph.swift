@@ -59,8 +59,8 @@ extension Digraph: Graph {
     ///
     /// - Parameters:
     ///  - v: The vertex for which to get the adjacency list. Must be greater than or equal to `0` and less than `vertexCount`.
-    public func adjacent(v: Int) -> [Int] {
+    public func adjacent(v: Int) -> AnyCollection<Int> {
         precondition(v >= 0 && v < vertices.count)
-        return vertices[v]
+        return AnyCollection(vertices[v])
     }
 }

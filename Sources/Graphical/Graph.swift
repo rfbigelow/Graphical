@@ -20,5 +20,5 @@ public protocol Graph {
     ///
     /// - Parameters:
     ///  - v: The vertex for which to get the adjacency list. Must be greater than or equal to `0` and less than `vertexCount`.
-    func adjacent(v: Int) -> [Int]
+    func adjacent(v: Int) -> AnyCollection<Int>
 }

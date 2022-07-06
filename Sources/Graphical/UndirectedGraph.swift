@@ -34,8 +34,8 @@ extension UndirectedGraph: Graph {
         return vertices.count
     }
     
-    public func adjacent(v: Int) -> [Int] {
+    public func adjacent(v: Int) -> AnyCollection<Int> {
         precondition(v >= 0 && v < vertexCount)
-        return vertices[v]
+        return AnyCollection(vertices[v])
     }
 }
