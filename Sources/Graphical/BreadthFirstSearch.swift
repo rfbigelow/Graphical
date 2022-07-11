@@ -23,7 +23,6 @@ class BreadthFirstSearch: Collection {
     }
 
     private let g: Graph
-    private var color: [Color]
     private var distance: [Int]
     private var predecessor: [Int?]
     
@@ -34,7 +33,7 @@ class BreadthFirstSearch: Collection {
     ///  - startingVertex: The vertex to search from. Must be a vertex in the graph.
     init(graph: Graph, startingVertex: Int) {
         g = graph
-        color = Array(repeating: Color.white, count: g.vertexCount)
+        var color = Array(repeating: Color.white, count: g.vertexCount)
         distance = Array(repeating: Int.max, count: g.vertexCount)
         predecessor = Array(repeating: nil, count: g.vertexCount)
         
